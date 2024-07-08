@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useCreateCountryMutation, useListContinentsQuery } from '@/types/graphql';
 import styles from '@/styles/CreateCountry.module.css';
 import { ApolloError } from '@apollo/client';
+import { LIST_COUNTRIES } from '@/requetes/queries/country.queries';
 
 type FormType = {
   name: string;
@@ -18,31 +19,29 @@ const CreateCountry = () => {
   
   const { register, handleSubmit, formState: { errors } } = useForm<FormType>();
 
-  const onSubmit: SubmitHandler<FormType> = async (infos) => {
-    console.log('Form data:', infos);
-
-    try {
-      const response = await createCountry({
-        variables: {
-          infos: {
-            name: infos.name,
-            code: infos.code,
-            emoji: infos.emoji,
-            continent: parseInt(infos.continentId as unknown as string, 10) // Assurez-vous que la valeur est un entier
-          }
+  const onSubmit: SubmitHandler<FormType> = (infos) => {
+    createCountry({
+      variables: {
+        infos: {
+          name: infos.name,
+          code: infos.code,
+          emoji: infos.emoji,
+          continent: parseInt(infos.continentId as unknown as string, 10)
         }
-      });
-
-      if (response.data?.addCountry) {
-        router.push(`/`);
+      },
+      onCompleted(data) {
+        if (data?.addCountry) {
+          router.push(`/`);
+        }
+      },
+      onError(err) {
+        if (err instanceof ApolloError) {
+          console.error('ApolloError:', err.message);
+        } else {
+          console.error(err);
+        }
       }
-    } catch (err) {
-      if (err instanceof ApolloError) {
-        console.error('ApolloError:', err.message, err.graphQLErrors, err.networkError);
-      } else {
-        console.error(err);
-      }
-    }
+    });
   };
 
   if (loading) {
