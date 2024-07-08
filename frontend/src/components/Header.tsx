@@ -15,13 +15,12 @@ export default function Header() {
   return (
     <header className="header">
       <h1>Checkpoint : frontend</h1>
-      <Link className={styles.button} href={`/countries/create/`}>Créer un nouveau pays</Link>
       {data?.countries.length ? (
         <CountryCard countries={data.countries} />
       ) : (
         <div>Aucun Pays</div>
       )}
-        
+           <Link className={styles.button} href={`/countries/create/`}>Créer un nouveau pays</Link>
     </header>
   );
 }
