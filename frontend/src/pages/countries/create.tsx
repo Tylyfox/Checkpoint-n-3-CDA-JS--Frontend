@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useCreateCountryMutation, useListContinentsQuery } from '@/types/graphql';
 import styles from '@/styles/CreateCountry.module.css';
 import { ApolloError } from '@apollo/client';
-import { LIST_COUNTRIES } from '@/requetes/queries/country.queries';
 
 type FormType = {
   name: string;
